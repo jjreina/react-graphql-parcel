@@ -25,6 +25,7 @@ class BookList extends React.Component<Props, {}> {
             })
         }
     }
+    
     render() {
         return (
             <div>
