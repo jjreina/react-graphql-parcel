@@ -1,9 +1,12 @@
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
+const cors = require("cors");
+
 const schema = require("./schema/schema");
 const mongoose = require("mongoose");
 
 const app = new express();
+app.use(cors());
 
 // TODO: Use ypur own url, user and pass
 mongoose.connect("mongodb://jjreina:1234@ds219100.mlab.com:19100/gql-books");
