@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
+import BookDetails from './bookDetails';
 
 import { getBooksQuery} from '../queries/queries';
 
@@ -7,9 +8,17 @@ interface Props {
     data: any
 }
 
-class BookList extends React.Component<Props, {}> {
+interface State {
+    selected: string
+}
+
+class BookList extends React.Component<Props, State> {
     constructor(props) {
         super(props);
+
+        this.state = {
+            selected: null
+        };
     }
 
     displayBooks = () =>
@@ -20,18 +29,19 @@ class BookList extends React.Component<Props, {}> {
         } else {
             return data.books.map(book => {
                 return (
-                    <li key={book.id}>{book.name}</li>
+                    <li key={book.id} onClick={ (e) => { this.setState({selected: book.id}) } }>{book.name}</li>
                 );
             })
         }
     }
-    
+
     render() {
         return (
             <div>
                 <ul id="book-list">
                     {this.displayBooks()}
                 </ul>
+                <BookDetails bookId={ this.state.selected }/>
             </div>
         )
     }

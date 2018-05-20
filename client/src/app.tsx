@@ -15,8 +15,8 @@ export const App: React.StatelessComponent = () => {
     const number: number = 6
     return(
         <ApolloProvider client={client}>
-            <div>
-                <h1>{`${text} plus es${number} on Parcel!!`}</h1>
+            <div id="main">
+                <h1>Books List</h1>
                 <BookList/>
                 <AddBook/>
             </div>
