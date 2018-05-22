@@ -1,17 +1,31 @@
 import * as React from 'react';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 
-import  { getBookQuery } from '../queries/queries'
+import  { getBookQuery, removeBookMutation, getBooksQuery } from '../queries/queries'
 
 interface Props {
     bookId: string,
-    data?: any
+    data?: any,
+    removeBookMutation?: any
 }
 
 class BookDetails extends React.Component<Props, {}> {
     constructor(props) {
         super(props);
     };
+
+    removeBook(bookId: string) {
+        console.log(bookId);
+        this.props.removeBookMutation({
+            variables: {
+                id: bookId
+            },
+            refetchQueries: [
+                { query: getBooksQuery }, 
+                { query: getBookQuery, variables: { id: bookId } }
+            ]
+        });
+    }
 
     displayBookDetails() {
         const { book } = this.props.data;
@@ -29,7 +43,7 @@ class BookDetails extends React.Component<Props, {}> {
                             })
                         }
                     </ul>
-                    <button>-</button>
+                    <button onClick={this.removeBook.bind(this, book.id)}>-</button>
                     <p className="remove-text">Remove book</p>
                 </div>
             )
@@ -48,12 +62,15 @@ class BookDetails extends React.Component<Props, {}> {
     }
 }
 
-export default graphql(getBookQuery, {
-    options: (props: Props) => {
-        return {
-            variables: {
-                id: props.bookId
+export default compose(
+    graphql(getBookQuery, {
+        options: (props: Props) => {
+            return {
+                variables: {
+                    id: props.bookId
+                }
             }
         }
-    }
-})(BookDetails);
+    }),
+    graphql(removeBookMutation, { name: "removeBookMutation" })
+)(BookDetails);
