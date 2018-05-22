@@ -94,8 +94,6 @@ form button{
     top: 10px;
     left: 10px;
     display: inline-block;
-    position: absolute;
-    margin-top: 361px;
 }
 
 .remove-text {
