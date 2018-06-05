@@ -1,24 +1,20 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
 import BookDetails from './bookDetails';
+import { connect } from 'react-redux';
 
 import { getBooksQuery} from '../queries/queries';
+import { selectedBook } from '../actions/selectBookAction';
 
 interface Props {
-    data: any
+    data: any,
+    selectedBookId: string,
+    selectedBook: any
 }
 
-interface State {
-    selected: string
-}
-
-class BookList extends React.Component<Props, State> {
+class BookList extends React.Component<Props, {}> {
     constructor(props) {
         super(props);
-
-        this.state = {
-            selected: null
-        };
     }
 
     displayBooks = () =>
@@ -29,7 +25,7 @@ class BookList extends React.Component<Props, State> {
         } else {
             return data.books.map(book => {
                 return (
-                    <li key={book.id} onClick={ (e) => { this.setState({selected: book.id}) } }>{book.name}</li>
+                    <li key={book.id} onClick={ this.props.selectedBook.bind(this, book.id) }>{book.name}</li>
                 );
             })
         }
@@ -41,10 +37,24 @@ class BookList extends React.Component<Props, State> {
                 <ul id="book-list">
                     {this.displayBooks()}
                 </ul>
-                <BookDetails bookId={ this.state.selected }/>
+                <BookDetails bookId={ this.props.selectedBookId }/>
             </div>
         )
     }
 }
 
-export default graphql(getBooksQuery)(BookList);
+const mapStateToProps = state => {
+    return {
+        selectedBookId: state.selectBookReducer.selectedBookId
+    }
+}
+ 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectedBook: (selectedBookId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+            return dispatch(selectedBook(selectedBookId));
+        }
+    }
+}
+
+export default graphql(getBooksQuery)(connect(mapStateToProps, mapDispatchToProps)(BookList));

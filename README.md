@@ -6,3 +6,4 @@ Extras:
 - Parcel used as Bundle tool.
 - Typescript.
 - New feature for removing books.
+- State management via redux.
